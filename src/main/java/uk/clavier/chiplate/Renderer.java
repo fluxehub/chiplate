@@ -188,11 +188,11 @@ public class Renderer {
         glDeleteProgram(shaderProgram);
 
         // Free the window callbacks and destroy the window
-		glfwFreeCallbacks(window);
+        glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
 
-		// Terminate GLFW and free the error callback
-		glfwTerminate();
-		glfwSetErrorCallback(null).free();
+        // Terminate GLFW and free the error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 }
