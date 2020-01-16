@@ -35,6 +35,9 @@ public class Renderer {
     }
     
     public static long createWindow(int scaleFactor) {
+        // this is basically all copied from the LWJGL 3 getting started guide
+        // with some fixes and changes
+        
         // setup an error callback
         GLFWErrorCallback.createPrint(System.err).set();
 
