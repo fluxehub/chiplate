@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -148,7 +149,7 @@ public class Renderer {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 64, 32, 0, GL_RED, GL_UNSIGNED_BYTE, baseTexture);
-        
+
         // load shaders
         String vertexShaderSource = loadShader(ShaderType.VERTEX);
 		String fragShaderSource = loadShader(ShaderType.FRAGMENT);
@@ -173,6 +174,7 @@ public class Renderer {
     }
 
     public void render(ByteBuffer buffer) {
+        glClear(GL_COLOR_BUFFER_BIT);
         // update texture with new data and draw it
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 32, GL_RED, GL_UNSIGNED_BYTE, buffer);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
