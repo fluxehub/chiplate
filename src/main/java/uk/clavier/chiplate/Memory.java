@@ -5,6 +5,9 @@ public class Memory {
 
     public Memory() {
         this.ram = new byte[0xFFF];
+
+        // chip-8 font data
+        // yes this is the best way to do it mom
         byte[] font = new byte[] {
             (byte) 0xF0, (byte) 0x90, (byte) 0x90, (byte) 0x90, (byte) 0xF0, // 0
             (byte) 0x20, (byte) 0x60, (byte) 0x20, (byte) 0x20, (byte) 0x70, // 1
