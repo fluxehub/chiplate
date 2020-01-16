@@ -34,13 +34,13 @@ public class App {
         this.renderer.init();
 
         // Setup the input handler
-		glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
-			if (action == GLFW_RELEASE) {
+        glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+            if (action == GLFW_RELEASE) {
                 switch (key) {
                     case GLFW_KEY_ESCAPE:
                         glfwSetWindowShouldClose(win, true);
                         break;
-                        
+                    
                     default:
                         break;
                 }
