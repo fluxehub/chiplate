@@ -40,6 +40,7 @@ public class App {
         
         this.renderer.end();
     }
+
     public static void main(String[] args) throws IOException {
         byte[] program = Files.readAllBytes(Paths.get("programs/test_opcode.ch8"));
 
