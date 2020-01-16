@@ -15,9 +15,9 @@ public class App {
     private long window;
 
     private void loop() {
-		// Run the rendering loop until the user has attempted to close
-		// the window or has pressed the ESCAPE key.
-		while (!glfwWindowShouldClose(this.window)) {
+        // Run the rendering loop until the user has attempted to close
+        // the window or has pressed the ESCAPE key.
+        while (!glfwWindowShouldClose(this.window)) {
             // Cycle 9 times for roughly correct clock speed
             for (int i = 0; i < 9; ++i) {
                 this.cpu.cycle();
@@ -25,25 +25,40 @@ public class App {
 
             this.cpu.doTimerTick();
             this.display.render();
-		}
+        }
     }
 
-    public void run(Memory ram) throws IOException {
+    public void init(Memory ram) throws IOException {
         this.window = Renderer.createWindow(SCALE_FACTOR);
         this.renderer = new Renderer(window);
         this.renderer.init();
 
+        // Setup the input handler
+		glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+			if (action == GLFW_RELEASE) {
+                switch (key) {
+                    case GLFW_KEY_ESCAPE:
+                        glfwSetWindowShouldClose(win, true);
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+        });
+        
         this.display = new Display(this.renderer);
         this.cpu = new CPU(ram, this.display, true);
-        
+    }
+
+    public void run(Memory ram) throws IOException {
+        this.init(ram);
         this.loop();
-        
         this.renderer.end();
     }
 
     public static void main(String[] args) throws IOException {
         byte[] program = Files.readAllBytes(Paths.get("programs/test_opcode.ch8"));
-
         Memory ram = new Memory();
 
         byte[] test = {
@@ -54,8 +69,8 @@ public class App {
             (byte) 0xD4, (byte) 0x55,
             (byte) 0x12, (byte) 0x0A,
         };
-        ram.loadProgram(program);
 
+        ram.loadProgram(program);
         new App().run(ram);
     }
 }
