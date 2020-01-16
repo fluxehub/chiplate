@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class App {
-    final int SCALE_FACTOR = 16;
+    final int SCALE_FACTOR = 16; 
 
     private Display display;
     private CPU cpu;
@@ -41,7 +41,7 @@ public class App {
         this.renderer.end();
     }
     public static void main(String[] args) throws IOException {
-        byte[] program = Files.readAllBytes(Paths.get("D:\\Users\\Paul\\Desktop\\chiplate\\programs\\test_opcode.ch8"));
+        byte[] program = Files.readAllBytes(Paths.get("programs/test_opcode.ch8"));
 
         Memory ram = new Memory();
 
