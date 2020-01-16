@@ -41,11 +41,13 @@ public class Renderer {
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
-
-		// Configure GLFW
-		glfwDefaultWindowHints(); // optional, the current window hints are already the default
+		// Configure GLFWsupported.OpenGL30
+		glfwDefaultWindowHints(); // optional, the current wisupported.OpenGL30ndow hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create the window
 		long window = glfwCreateWindow(64*scaleFactor, 32*scaleFactor, "Chiplate", NULL, NULL);
@@ -96,14 +98,14 @@ public class Renderer {
 			toRead += "frag";
 		}
 
-		return Files.readString(Paths.get(toRead));
+		return new String (Files.readAllBytes(Paths.get(toRead)));
     }
 
     public void init() throws IOException {
         GL.createCapabilities();
 
         // set the clear color
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // basic full-screen quad
         float vertices[] = {
