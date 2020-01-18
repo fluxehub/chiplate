@@ -287,15 +287,24 @@ public class CPU {
 
                         return;
                     case 0x33:
-                        // TODO: bcd hell
+                        // convert to unsigned to avoid weird errors
+                        int n = Byte.toUnsignedInt(this.registers[x]);
+
+                        this.ram.setByte(this.i,     (byte) (Math.floor(n / 100)));
+                        this.ram.setByte(this.i + 1, (byte) (Math.floor(n /  10) % 10));
+                        this.ram.setByte(this.i + 2, (byte) (n % 10));
 
                         return;
-                    case 0x55:
-                        // TODO: store
+                    case 0x55: 
+                        for (int offset = 0; offset <= x; ++offset) {
+                            this.ram.setByte(this.i + offset, this.registers[offset]);
+                        }
 
                         return;
                     case 0x65:
-                        // TODO: ld
+                        for (int offset = 0; offset <= x; ++offset) {
+                            this.registers[offset] = (byte) this.ram.getByte(this.i + offset);
+                        }
 
                         return;
                 }
