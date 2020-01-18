@@ -1,5 +1,7 @@
 package uk.clavier.chiplate;
 
+import java.util.Random;
+
 public class CPU {
     private Memory ram;
     private Display display;
@@ -14,6 +16,8 @@ public class CPU {
     private int soundTimer;
 
     private boolean falseShift;
+
+    private Random rd;
 
     // Headless mode
     public CPU(Memory ram, boolean falseShift) {
@@ -33,6 +37,8 @@ public class CPU {
         this.delayTimer = 0;
         this.soundTimer = 0;
         this.falseShift = falseShift;
+
+        this.rd = new Random(System.currentTimeMillis());
     }
 
     // Testing dumps
@@ -225,7 +231,7 @@ public class CPU {
                 return;
 
             case 0xC:
-                // TODO: random
+                this.registers[x] = (byte) (this.rd.nextInt() & val);
 
                 return;
 

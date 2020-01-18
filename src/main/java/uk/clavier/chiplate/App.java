@@ -8,7 +8,7 @@ import java.util.Arrays;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class App {
-    final int SCALE_FACTOR = 16; 
+    final int SCALE_FACTOR = 8; 
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -95,7 +95,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         // read program from file and into ram
-        byte[] program = Files.readAllBytes(Paths.get("programs/test_opcode.ch8"));
+        byte[] program = Files.readAllBytes(Paths.get("programs/MAZE"));
         Memory ram = new Memory();
         ram.loadProgram(program);
 
