@@ -56,6 +56,10 @@ public class CPU {
         return this.i;
     }
 
+    public int dumpOpcode() {
+        return (this.ram.getByte(this.pc) << 8) + this.ram.getByte(this.pc + 1);
+    }
+
     private int[] splitOpcode(int opcode) {
         int[] split = new int[4];
 
@@ -72,7 +76,7 @@ public class CPU {
 
         int x = split[2];
         int y = split[1];
-        int val = opcode & 0xFF;
+        byte val = (byte) (opcode & 0xFF);
 
         switch (opcode) {
             case 0x00E0:
