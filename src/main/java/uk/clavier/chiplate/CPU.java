@@ -226,7 +226,7 @@ public class CPU {
                 return;
 
             case 0xB:
-                this.pc = (opcode & 0xFFF) + registers[0];
+                this.pc = (opcode & 0xFFF) + Byte.toUnsignedInt(this.registers[0]);
 
                 return;
 
@@ -277,15 +277,15 @@ public class CPU {
 
                         return;
                     case 0x15:
-                        this.delayTimer = this.registers[x];
+                        this.delayTimer = Byte.toUnsignedInt(this.registers[x]);
 
                         return;
                     case 0x18:
-                        this.soundTimer = this.registers[x];
+                        this.soundTimer = Byte.toUnsignedInt(this.registers[x]);
 
                         return;
                     case 0x1E:
-                        this.i += this.registers[x];
+                        this.i += Byte.toUnsignedInt(this.registers[x]);
 
                         return;
                     case 0x29:
