@@ -321,10 +321,6 @@ public class CPU {
         int opcode = (this.ram.getByte(this.pc) << 8) + this.ram.getByte(this.pc + 1);
         this.pc += 2;
 
-        if (this.pc == 0x0370) {
-            this.pc = 0x0370;
-        }
-
         this.execute(opcode);
     }
 }
