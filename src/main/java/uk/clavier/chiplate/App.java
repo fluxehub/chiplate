@@ -87,6 +87,7 @@ public class App {
     }
 
     public void run(Memory ram) throws IOException {
+        this.debug = false;
         this.init(ram);
         this.loop();
         this.renderer.end();
@@ -97,7 +98,6 @@ public class App {
         byte[] program = Files.readAllBytes(Paths.get("programs/test_opcode.ch8"));
         Memory ram = new Memory();
         ram.loadProgram(program);
-        this.debug = false;
 
         new App().run(ram);
     }
