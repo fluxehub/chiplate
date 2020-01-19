@@ -73,20 +73,19 @@ public class CPU {
         int y = split[1];
         int val = opcode & 0xFF;
 
-        switch (opcode) {
-            case 0x00E0:
-                this.display.clear();
-
-                return;
-            case 0x00EE:
-                this.pc = this.stack[this.sp];
-                this.sp--;
-            
-                return;
-        }
-
         switch (split[3]) {
             case 0x0:
+                if (opcode == 0x00E0) {
+                    this.display.clear();
+
+                    return;
+                } else if (opcode == 0x00EE) {
+                    this.pc = this.stack[this.sp];
+                    this.sp--;
+                
+                    return;
+                }
+
                 System.out.println("0NNN called, panicking");
                 System.exit(1);
 
