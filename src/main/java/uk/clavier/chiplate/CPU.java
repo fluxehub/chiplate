@@ -1,12 +1,13 @@
 package uk.clavier.chiplate;
 
 import java.util.Random;
+import java.lang.Object;
 
 public class CPU {
     private Memory ram;
     private Display display;
 
-    private byte[] registers;
+    private int[] registers;
     private int i;
     private int[] stack;
 
@@ -14,7 +15,7 @@ public class CPU {
     private int sp;
     private int delayTimer;
     private int soundTimer;
-    private byte key;
+    private int key;
 
     private boolean falseShift;
 
@@ -29,7 +30,7 @@ public class CPU {
         this.ram = ram;
         this.display = display;
 
-        this.registers = new byte[16];
+        this.registers = new int[16];
         this.i = 0;
         this.stack = new int[50];
 
@@ -44,7 +45,7 @@ public class CPU {
     }
 
     // Testing dumps
-    public byte[] dumpRegisters() {
+    public int[] dumpRegisters() {
         return this.registers;
     }
 
@@ -79,7 +80,7 @@ public class CPU {
         return split;
     }
     
-    public void setKey(byte key) {
+    public void setKey(int key) {
         this.key = key;
     }
 
@@ -88,7 +89,7 @@ public class CPU {
 
         int x = split[2];
         int y = split[1];
-        byte val = (byte) (opcode & 0xFF);
+        int val = opcode & 0xFF;
 
         switch (opcode) {
             case 0x00E0:
@@ -146,12 +147,12 @@ public class CPU {
                 break;
 
             case 0x6:
-                this.registers[x] = (byte) val;
+                this.registers[x] = val;
 
                 return;
 
             case 0x7:
-                this.registers[x] += val;
+                this.registers[x] = (this.registers[x] + val) & 0xFF; // byte wrap
 
                 return;
 
@@ -176,22 +177,22 @@ public class CPU {
                     case 0x4: 
                         int addxy_res = this.registers[x] + this.registers[y];
                         this.registers[0xF] = (byte) ((addxy_res >> 4) & 1);
-                        this.registers[x] = (byte) (addxy_res & 0xFF);
+                        this.registers[x] = addxy_res & 0xFF;
 
                         return;
                     case 0x5:
                         int subxy_res = this.registers[x] - this.registers[y];
                         this.registers[0xF] = (byte) ~((subxy_res >> 4) & 1);
-                        this.registers[x] = (byte) (subxy_res & 0xFF);
+                        this.registers[x] = subxy_res & 0xFF;
 
                         return;
                     case 0x6:
                         if (this.falseShift) {
-                            this.registers[0xF] = (byte) (this.registers[x] & 1);
-                            this.registers[x] = (byte) (this.registers[x] >> 1);
+                            this.registers[0xF] = this.registers[x] & 1;
+                            this.registers[x] = (this.registers[x] >> 1) & 0xFF;
                         } else {
-                            this.registers[0xF] = (byte) (this.registers[y] & 1);
-                            this.registers[x] = (byte) (this.registers[y] >> 1);
+                            this.registers[0xF] = this.registers[y] & 1;
+                            this.registers[x] = (this.registers[y] >> 1) & 0xFF;
                         }
 
                         return;
@@ -204,10 +205,10 @@ public class CPU {
                     case 0xE:
                         if (this.falseShift) {
                             this.registers[0xF] = (byte) ((this.registers[x] >> 7) & 1);
-                            this.registers[x] = (byte) (this.registers[x] << 1);
+                            this.registers[x] = (this.registers[x] << 1) & 0xFF;
                         } else {
                             this.registers[0xF] = (byte) ((this.registers[y] >> 7) & 1);
-                            this.registers[x] = (byte) (this.registers[y] << 1);
+                            this.registers[x] = (byte) (this.registers[y] << 1) & 0xFF;
                         }
 
                         return;
@@ -232,12 +233,12 @@ public class CPU {
                 return;
 
             case 0xB:
-                this.pc = (opcode & 0xFFF) + Byte.toUnsignedInt(this.registers[0]);
+                this.pc = (opcode & 0xFFF) + this.registers[0];
 
                 return;
 
             case 0xC:
-                this.registers[x] = (byte) (this.rd.nextInt() & val);
+                this.registers[x] = this.rd.nextInt() & val;
 
                 return;
 
@@ -292,15 +293,15 @@ public class CPU {
 
                         return;
                     case 0x15:
-                        this.delayTimer = Byte.toUnsignedInt(this.registers[x]);
+                        this.delayTimer = this.registers[x];
 
                         return;
                     case 0x18:
-                        this.soundTimer = Byte.toUnsignedInt(this.registers[x]);
+                        this.soundTimer = this.registers[x];
 
                         return;
                     case 0x1E:
-                        this.i += Byte.toUnsignedInt(this.registers[x]);
+                        this.i += this.registers[x];
 
                         return;
                     case 0x29:
@@ -308,8 +309,7 @@ public class CPU {
 
                         return;
                     case 0x33:
-                        // convert to unsigned to avoid weird errors
-                        int n = Byte.toUnsignedInt(this.registers[x]);
+                        int n = this.registers[x];
 
                         this.ram.setByte(this.i,     (byte) (Math.floor(n / 100)));
                         this.ram.setByte(this.i + 1, (byte) (Math.floor(n /  10) % 10));
@@ -318,13 +318,13 @@ public class CPU {
                         return;
                     case 0x55: 
                         for (int offset = 0; offset <= x; ++offset) {
-                            this.ram.setByte(this.i + offset, this.registers[offset]);
+                            this.ram.setByte(this.i + offset, (byte) this.registers[offset]);
                         }
 
                         return;
                     case 0x65:
                         for (int offset = 0; offset <= x; ++offset) {
-                            this.registers[offset] = (byte) this.ram.getByte(this.i + offset);
+                            this.registers[offset] = this.ram.getByte(this.i + offset);
                         }
 
                         return;

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -27,8 +26,8 @@ public class App {
     private long window;
     private boolean debug;
 
-    private byte[] debugValues(byte[] previousRegisters) {
-        byte[] registers = this.cpu.dumpRegisters();
+    private int[] debugValues(int[] previousRegisters) {
+        int[] registers = this.cpu.dumpRegisters();
         System.out.println(String.format("Next PC: %04x\tNext Opcode: %04x", this.cpu.dumpPC(), this.cpu.dumpOpcode()));
 
         for (int i = 0; i < 16; ++i) {
@@ -39,6 +38,7 @@ public class App {
                 System.out.println(String.format("v%01x: %02x\t", i, registers[i]));
             }
         }
+        
         System.out.println("");
 
         return registers.clone();
@@ -46,13 +46,13 @@ public class App {
 
     private void loop() {
         // Define dummy values for debugging
-        byte[] previousRegisters = new byte[16];
-        Arrays.fill(previousRegisters, (byte) 0xFF);
+        int[] previousRegisters = new int[16];
+        Arrays.fill(previousRegisters, 0xFF);
 
         // stop running when it's time to close
         while (!glfwWindowShouldClose(this.window)) {
             // cycle 9 times for roughly correct(tm) clock speed
-            for (int i = 0; i <= 9; ++i) {
+            for (int i = 0; i <= 11; ++i) {
                 if (debug) {
                     previousRegisters = this.debugValues(previousRegisters);
                 }
@@ -95,7 +95,7 @@ public class App {
                     case GLFW_KEY_X:
                     case GLFW_KEY_C:
                     case GLFW_KEY_V:
-                        this.cpu.setKey((byte) -1);
+                        this.cpu.setKey(-1);
                         break;
                     
                     default:
@@ -107,67 +107,67 @@ public class App {
                 switch (key) {
                     // probably faster than a hashmap(tm)
                     case GLFW_KEY_1:
-                        this.cpu.setKey((byte) 0x1);
+                        this.cpu.setKey(0x1);
                         break;
 
                     case GLFW_KEY_2:
-                        this.cpu.setKey((byte) 0x2);
+                        this.cpu.setKey(0x2);
                         break;
 
                     case GLFW_KEY_3:
-                        this.cpu.setKey((byte) 0x3);
+                        this.cpu.setKey(0x3);
                         break;
                         
                     case GLFW_KEY_4:
-                        this.cpu.setKey((byte) 0xC);
+                        this.cpu.setKey(0xC);
                         break;
                     
                     case GLFW_KEY_Q:
-                        this.cpu.setKey((byte) 0x4);
+                        this.cpu.setKey(0x4);
                         break;
                     
                     case GLFW_KEY_W:
-                        this.cpu.setKey((byte) 0x5);
+                        this.cpu.setKey(0x5);
                         break;
                         
                     case GLFW_KEY_E:
-                        this.cpu.setKey((byte) 0x6);
+                        this.cpu.setKey(0x6);
                         break;
                     
                     case GLFW_KEY_R:
-                        this.cpu.setKey((byte) 0xD);
+                        this.cpu.setKey(0xD);
                         break;
                     
                     case GLFW_KEY_A:
-                        this.cpu.setKey((byte) 0x7);
+                        this.cpu.setKey(0x7);
                         break;
                     
                     case GLFW_KEY_S:
-                        this.cpu.setKey((byte) 0x8);
+                        this.cpu.setKey(0x8);
                         break;
                     
                     case GLFW_KEY_D:
-                        this.cpu.setKey((byte) 0x9);
+                        this.cpu.setKey(0x9);
                         break;
                         
                     case GLFW_KEY_F:
-                        this.cpu.setKey((byte) 0xE);
+                        this.cpu.setKey(0xE);
                         break;
                     
                     case GLFW_KEY_Z:
-                        this.cpu.setKey((byte) 0xA);
+                        this.cpu.setKey(0xA);
                         break;
                     
                     case GLFW_KEY_X:
-                        this.cpu.setKey((byte) 0x0);
+                        this.cpu.setKey(0x0);
                         break;
                     
                     case GLFW_KEY_C:
-                        this.cpu.setKey((byte) 0xB);
+                        this.cpu.setKey(0xB);
                         break;
                     
                     case GLFW_KEY_V:
-                        this.cpu.setKey((byte) 0xF);
+                        this.cpu.setKey(0xF);
                         break;
                 }
             }
@@ -186,7 +186,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         // read program from file and into ram
-        byte[] program = Files.readAllBytes(Paths.get("programs/PONG"));
+        byte[] program = Files.readAllBytes(Paths.get("programs/BRIX"));
         Memory ram = new Memory();
         ram.loadProgram(program);
 
