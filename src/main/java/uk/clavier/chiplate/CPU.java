@@ -305,7 +305,7 @@ public class CPU {
 
                         return;
                     case 0x29:
-                        this.i = x * 5;
+                        this.i = this.registers[x] * 5;
 
                         return;
                     case 0x33:
