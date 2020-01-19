@@ -152,7 +152,8 @@ public class App {
         this.renderer = new Renderer(window);
         this.renderer.init();
 
-        this.run("programs/BC_test.ch8");
+        // TODO: Add to classpath
+        this.run("programs/SPLASH");
     }
 
     public void init(Memory ram) throws IOException {
