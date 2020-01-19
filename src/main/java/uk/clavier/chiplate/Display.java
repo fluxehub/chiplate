@@ -16,11 +16,11 @@ public class Display {
     public boolean setPixel(int x, int y, byte value) {
         boolean unset = false;
         int index = x + (y * 64);
-        int currentPixel = this.buffer.get(index) & 1;
+        int currentPixel = Byte.toUnsignedInt(buffer.get(index)) & 1;
 
         int toDraw = value ^ currentPixel;
 
-        if (toDraw == 0 && currentPixel == 1) {
+        if (value == 1 && currentPixel == 1) {
             unset = true;
         }
 
