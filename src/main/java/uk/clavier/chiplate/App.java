@@ -51,13 +51,15 @@ public class App {
 
         // stop running when it's time to close
         while (!glfwWindowShouldClose(this.window)) {
-            // cycle 9 times for roughly correct(tm) clock speed
-            for (int i = 0; i <= 11; ++i) {
-                if (debug) {
-                    previousRegisters = this.debugValues(previousRegisters);
-                }
-
+            // update screen every cycle in debug mode
+            if (debug) {
+                previousRegisters = this.debugValues(previousRegisters);
                 this.cpu.cycle();
+            } else {
+                // for loop cycle for roughly correct(tm) clock speed
+                for (int i = 0; i <= 10; ++i) {
+                    this.cpu.cycle();
+                }
             }
 
             this.cpu.doTimerTick();
@@ -178,7 +180,7 @@ public class App {
     }
 
     public void run(Memory ram) throws IOException {
-        this.debug = true;
+        this.debug = false;
         this.init(ram);
         this.loop();
         this.renderer.end();

@@ -176,13 +176,25 @@ public class CPU {
                         return;
                     case 0x4: 
                         int addxy_res = this.registers[x] + this.registers[y];
-                        this.registers[0xF] = (byte) ((addxy_res >> 4) & 1);
+
+                        if (addxy_res > 255) {
+                            this.registers[0xF] = 1;
+                        } else {
+                            this.registers[0xF] = 0;
+                        }
+
                         this.registers[x] = addxy_res & 0xFF;
 
                         return;
                     case 0x5:
                         int subxy_res = this.registers[x] - this.registers[y];
-                        this.registers[0xF] = (byte) ~((subxy_res >> 4) & 1);
+
+                        if (this.registers[x] < this.registers[y]) {
+                            this.registers[0xF] = 0;
+                        } else {
+                            this.registers[0xF] = 1;
+                        }
+
                         this.registers[x] = subxy_res & 0xFF;
 
                         return;
@@ -198,7 +210,13 @@ public class CPU {
                         return;
                     case 0x7:
                         int subnxy_res = this.registers[y] - this.registers[x];
-                        this.registers[0xF] = (byte) ~((subnxy_res >> 4) & 1);
+
+                        if (this.registers[y] < this.registers[x]) {
+                            this.registers[0xF] = 0;
+                        } else {
+                            this.registers[0xF] = 1;
+                        }
+
                         this.registers[x] = (byte) (subnxy_res & 0xFF);
 
                         return;
