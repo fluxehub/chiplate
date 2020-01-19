@@ -1,7 +1,6 @@
 package uk.clavier.chiplate;
 
 import java.util.Random;
-import java.lang.Object;
 
 public class CPU {
     private Memory ram;
@@ -21,11 +20,6 @@ public class CPU {
 
     private Random rd;
 
-    // Headless mode
-    public CPU(Memory ram, boolean falseShift) {
-        new CPU(ram, null, falseShift);
-    }
-
     public CPU(Memory ram, Display display, boolean falseShift) {
         this.ram = ram;
         this.display = display;
@@ -44,25 +38,13 @@ public class CPU {
         this.rd = new Random(System.currentTimeMillis());
     }
 
-    // Testing dumps
+    // debug mode dumps
     public int[] dumpRegisters() {
         return this.registers;
     }
 
-    public int[] dumpStack() {
-        return this.stack;
-    }
-
-    public int dumpSP() {
-        return this.sp;
-    }
-
     public int dumpPC() {
         return this.pc;
-    }
-
-    public int dumpI() {
-        return this.i;
     }
 
     public int dumpOpcode() {
