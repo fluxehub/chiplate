@@ -16,27 +16,30 @@ public class Display {
     public boolean setPixel(int x, int y, byte value) {
         boolean unset = false;
         int index = x + (y * 64);
-        byte currentPixel = this.buffer.get(index);
+        int currentPixel = this.buffer.get(index) & 1;
 
-        if (currentPixel == (byte) 0xFF) {
+        int toDraw = value ^ currentPixel;
+
+        if (toDraw == 0 && currentPixel == 1) {
             unset = true;
         }
 
-        byte toDraw;
-
-        if (value == 1) {
-            toDraw = (byte) 0xFF;
-        } else {
-            toDraw = 0x00;
-        }
-
-        this.buffer.put(index, toDraw);
+        this.buffer.put(index, (byte) (toDraw * 0xFF));
 
         return unset;
     }
 
     public void clear() {
-        this.buffer.clear();
+        this.buffer.position(0);
+
+        // buffer.clear() doesn't actually clear buffer
+        // so fill with 0s
+        // probably fast
+        for (int i = 0; i < 64 * 32; ++i) {
+            this.buffer.put((byte) 0);
+        }
+
+        this.buffer.position(0);
     }
 
     public void render() {
