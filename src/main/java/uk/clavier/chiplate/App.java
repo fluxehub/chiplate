@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -51,10 +52,11 @@ public class App {
         // stop running when it's time to close
         while (!glfwWindowShouldClose(this.window)) {
             // cycle 9 times for roughly correct(tm) clock speed
-            for (int i = 0; i < 9; ++i) {
+            for (int i = 0; i <= 9; ++i) {
                 if (debug) {
                     previousRegisters = this.debugValues(previousRegisters);
                 }
+
                 this.cpu.cycle();
             }
 
@@ -76,7 +78,96 @@ public class App {
                         glfwSetWindowShouldClose(win, true);
                         break;
                     
+                    // Set keyup
+                    case GLFW_KEY_1:
+                    case GLFW_KEY_2:
+                    case GLFW_KEY_3:
+                    case GLFW_KEY_4:
+                    case GLFW_KEY_Q:
+                    case GLFW_KEY_W:
+                    case GLFW_KEY_E:
+                    case GLFW_KEY_R:
+                    case GLFW_KEY_A:
+                    case GLFW_KEY_S:
+                    case GLFW_KEY_D:
+                    case GLFW_KEY_F:
+                    case GLFW_KEY_Z:
+                    case GLFW_KEY_X:
+                    case GLFW_KEY_C:
+                    case GLFW_KEY_V:
+                        this.cpu.setKey((byte) -1);
+                        break;
+                    
                     default:
+                        break;
+                }
+            }
+
+            if (action == GLFW_PRESS) {
+                switch (key) {
+                    // probably faster than a hashmap(tm)
+                    case GLFW_KEY_1:
+                        this.cpu.setKey((byte) 0x1);
+                        break;
+
+                    case GLFW_KEY_2:
+                        this.cpu.setKey((byte) 0x2);
+                        break;
+
+                    case GLFW_KEY_3:
+                        this.cpu.setKey((byte) 0x3);
+                        break;
+                        
+                    case GLFW_KEY_4:
+                        this.cpu.setKey((byte) 0xC);
+                        break;
+                    
+                    case GLFW_KEY_Q:
+                        this.cpu.setKey((byte) 0x4);
+                        break;
+                    
+                    case GLFW_KEY_W:
+                        this.cpu.setKey((byte) 0x5);
+                        break;
+                        
+                    case GLFW_KEY_E:
+                        this.cpu.setKey((byte) 0x6);
+                        break;
+                    
+                    case GLFW_KEY_R:
+                        this.cpu.setKey((byte) 0xD);
+                        break;
+                    
+                    case GLFW_KEY_A:
+                        this.cpu.setKey((byte) 0x7);
+                        break;
+                    
+                    case GLFW_KEY_S:
+                        this.cpu.setKey((byte) 0x8);
+                        break;
+                    
+                    case GLFW_KEY_D:
+                        this.cpu.setKey((byte) 0x9);
+                        break;
+                        
+                    case GLFW_KEY_F:
+                        this.cpu.setKey((byte) 0xE);
+                        break;
+                    
+                    case GLFW_KEY_Z:
+                        this.cpu.setKey((byte) 0xA);
+                        break;
+                    
+                    case GLFW_KEY_X:
+                        this.cpu.setKey((byte) 0x0);
+                        break;
+                    
+                    case GLFW_KEY_C:
+                        this.cpu.setKey((byte) 0xB);
+                        break;
+                    
+                    case GLFW_KEY_V:
+                        this.cpu.setKey((byte) 0xF);
                         break;
                 }
             }
@@ -95,7 +186,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         // read program from file and into ram
-        byte[] program = Files.readAllBytes(Paths.get("programs/MAZE"));
+        byte[] program = Files.readAllBytes(Paths.get("programs/PONG"));
         Memory ram = new Memory();
         ram.loadProgram(program);
 

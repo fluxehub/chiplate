@@ -14,6 +14,7 @@ public class CPU {
     private int sp;
     private int delayTimer;
     private int soundTimer;
+    private byte key;
 
     private boolean falseShift;
 
@@ -37,6 +38,7 @@ public class CPU {
         this.delayTimer = 0;
         this.soundTimer = 0;
         this.falseShift = falseShift;
+        this.key = -1;
 
         this.rd = new Random(System.currentTimeMillis());
     }
@@ -75,6 +77,10 @@ public class CPU {
         split[3] = (opcode >> 12) & 0xF;
 
         return split;
+    }
+    
+    public void setKey(byte key) {
+        this.key = key;
     }
 
     private void execute(int opcode) {
@@ -241,9 +247,10 @@ public class CPU {
                 this.registers[0xF] = 0;
 
                 for (int j = 0; j < (val & 0xF); ++j) {
-                    for (int i = 0; i  < 8; ++i) {
+                    for (int i = 0; i < 8; ++i) {
                         if (sprite_x + i < 64 && sprite_y + j < 32) {
                             byte to_draw = (byte) ((this.ram.getByte(this.i + j) >> (7 - i)) & 1);
+
                             if (this.display.setPixel(i + sprite_x, j + sprite_y, to_draw)) {
                                 this.registers[0xF] = 1;
                             }
@@ -255,11 +262,15 @@ public class CPU {
 
             case 0xE:
                 if (split[1] == 0x9 && split[0] == 0xE) {
-                    // TODO: skip input
+                    if (this.registers[x] == this.key) {
+                        this.pc += 2;
+                    }
 
                     return;
                 } else if (split[1] == 0xA && split[0] == 0x1) {
-                    // TODO: skip input
+                    if (this.registers[x] != this.key) {
+                        this.pc += 2;
+                    }
 
                     return;
                 }
@@ -273,7 +284,11 @@ public class CPU {
 
                         return;
                     case 0x0A:
-                        // TODO: wait
+                        if (this.key == -1) {
+                            this.pc -= 2;
+                        } else {
+                            this.registers[x] = this.key;
+                        }
 
                         return;
                     case 0x15:
