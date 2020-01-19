@@ -38,7 +38,7 @@ public class App {
                 System.out.println(String.format("v%01x: %02x\t", i, registers[i]));
             }
         }
-        
+
         System.out.println("");
 
         return registers.clone();
@@ -178,7 +178,7 @@ public class App {
     }
 
     public void run(Memory ram) throws IOException {
-        this.debug = false;
+        this.debug = true;
         this.init(ram);
         this.loop();
         this.renderer.end();
