@@ -7,6 +7,6 @@ uniform sampler2D screen;
 
 void main() {
     // monochrome display, just read the red channel
-    float luminance = texture(screen, texCoord).r;
+    float luminance = texture(screen, texCoord).r * 255;
     color = vec4(luminance, luminance, luminance, 1.0);
 }
